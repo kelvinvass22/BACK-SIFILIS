@@ -1,0 +1,715 @@
+openapi: 3.0.3
+info:
+  title: App Sífilis 60+ API
+  version: 1.0.0
+  description: API para educação em saúde e teleorientação para idosos (TCC Kelvin)
+paths:
+  /api/conteudo/:
+    get:
+      operationId: conteudo_list
+      tags:
+      - conteudo
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostEducativo'
+          description: ''
+    post:
+      operationId: conteudo_create
+      tags:
+      - conteudo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostEducativo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostEducativo'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostEducativo'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostEducativo'
+          description: ''
+  /api/conteudo/{id}/:
+    get:
+      operationId: conteudo_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este post educativo.
+        required: true
+      tags:
+      - conteudo
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostEducativo'
+          description: ''
+    put:
+      operationId: conteudo_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este post educativo.
+        required: true
+      tags:
+      - conteudo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostEducativo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostEducativo'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostEducativo'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostEducativo'
+          description: ''
+    patch:
+      operationId: conteudo_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este post educativo.
+        required: true
+      tags:
+      - conteudo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPostEducativo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPostEducativo'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPostEducativo'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostEducativo'
+          description: ''
+    delete:
+      operationId: conteudo_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este post educativo.
+        required: true
+      tags:
+      - conteudo
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/duvidas/:
+    get:
+      operationId: duvidas_list
+      tags:
+      - duvidas
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Duvida'
+          description: ''
+    post:
+      operationId: duvidas_create
+      tags:
+      - duvidas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Duvida'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Duvida'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Duvida'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Duvida'
+          description: ''
+  /api/duvidas/{id}/:
+    get:
+      operationId: duvidas_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este Dúvida.
+        required: true
+      tags:
+      - duvidas
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Duvida'
+          description: ''
+    put:
+      operationId: duvidas_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este Dúvida.
+        required: true
+      tags:
+      - duvidas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Duvida'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Duvida'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Duvida'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Duvida'
+          description: ''
+    patch:
+      operationId: duvidas_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este Dúvida.
+        required: true
+      tags:
+      - duvidas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDuvida'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDuvida'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDuvida'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Duvida'
+          description: ''
+    delete:
+      operationId: duvidas_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este Dúvida.
+        required: true
+      tags:
+      - duvidas
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/ranking/:
+    get:
+      operationId: ranking_list
+      tags:
+      - ranking
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pontuacao'
+          description: ''
+    post:
+      operationId: ranking_create
+      tags:
+      - ranking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pontuacao'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pontuacao'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Pontuacao'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pontuacao'
+          description: ''
+  /api/ranking/{id}/:
+    get:
+      operationId: ranking_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este pontuacao.
+        required: true
+      tags:
+      - ranking
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pontuacao'
+          description: ''
+    put:
+      operationId: ranking_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este pontuacao.
+        required: true
+      tags:
+      - ranking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pontuacao'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pontuacao'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Pontuacao'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pontuacao'
+          description: ''
+    patch:
+      operationId: ranking_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este pontuacao.
+        required: true
+      tags:
+      - ranking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPontuacao'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPontuacao'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPontuacao'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pontuacao'
+          description: ''
+    delete:
+      operationId: ranking_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este pontuacao.
+        required: true
+      tags:
+      - ranking
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+components:
+  schemas:
+    CategoriaEnum:
+      enum:
+      - OQUE
+      - PREV
+      - TRAT
+      type: string
+      description: |-
+        * `OQUE` - O que é?
+        * `PREV` - Prevenção
+        * `TRAT` - Tratamento
+    Duvida:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        usuario_idoso:
+          type: integer
+        texto_pergunta:
+          type: string
+        data_pergunta:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        texto_resposta:
+          type: string
+          nullable: true
+        respondido_por:
+          type: integer
+          nullable: true
+        data_resposta:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - data_pergunta
+      - id
+      - status
+      - texto_pergunta
+      - usuario_idoso
+    JogoEnum:
+      enum:
+      - CACA
+      - AGIL
+      type: string
+      description: |-
+        * `CACA` - Caça-Palavras
+        * `AGIL` - Agilidade (Baratinha)
+    PatchedDuvida:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        usuario_idoso:
+          type: integer
+        texto_pergunta:
+          type: string
+        data_pergunta:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        texto_resposta:
+          type: string
+          nullable: true
+        respondido_por:
+          type: integer
+          nullable: true
+        data_resposta:
+          type: string
+          format: date-time
+          nullable: true
+    PatchedPontuacao:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        usuario:
+          type: integer
+          readOnly: true
+        usuario_nome:
+          type: string
+          title: Usuário
+          description: Obrigatório. 150 caracteres ou menos. Letras, números e @/./+/-/_
+            apenas.
+          readOnly: true
+        jogo:
+          $ref: '#/components/schemas/JogoEnum'
+        pontos:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        data_conquista:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedPostEducativo:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        categoria:
+          $ref: '#/components/schemas/CategoriaEnum'
+        titulo:
+          type: string
+          maxLength: 200
+        texto:
+          type: string
+        referencia:
+          type: string
+          maxLength: 255
+    Pontuacao:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        usuario:
+          type: integer
+          readOnly: true
+        usuario_nome:
+          type: string
+          title: Usuário
+          description: Obrigatório. 150 caracteres ou menos. Letras, números e @/./+/-/_
+            apenas.
+          readOnly: true
+        jogo:
+          $ref: '#/components/schemas/JogoEnum'
+        pontos:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        data_conquista:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - data_conquista
+      - id
+      - jogo
+      - usuario
+      - usuario_nome
+    PostEducativo:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        categoria:
+          $ref: '#/components/schemas/CategoriaEnum'
+        titulo:
+          type: string
+          maxLength: 200
+        texto:
+          type: string
+        referencia:
+          type: string
+          maxLength: 255
+      required:
+      - categoria
+      - id
+      - texto
+      - titulo
+    StatusEnum:
+      enum:
+      - PENDENTE
+      - RESPONDIDA
+      type: string
+      description: |-
+        * `PENDENTE` - Pendente
+        * `RESPONDIDA` - Respondida
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

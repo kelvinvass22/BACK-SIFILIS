@@ -134,9 +134,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #     )
 # }
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL') or 'postgres://postgres:postgres@db:5432/postgres'
+        # O segredo é NÃO deixar o 'db' como padrão se a variável existir
+        default=DATABASE_URL if DATABASE_URL else 'postgres://postgres:postgres@db:5432/postgres',
+        conn_max_age=600
     )
 }
 

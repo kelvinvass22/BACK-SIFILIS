@@ -1,39 +1,61 @@
-from rest_framework import viewsets
-from .models import Duvida
-from rest_framework.response import Response  # <--- ADICIONE ESTA LINHA AQUI!
-from .serializers import DuvidaSerializer
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
+from .models import Duvida
+from .serializers import DuvidaSerializer
 
 class DuvidaViewSet(viewsets.ModelViewSet):
-    queryset = Duvida.objects.all()
+    permission_classes = [IsAuthenticated] # <--- Garante que só quem tem token entra
     serializer_class = DuvidaSerializer
-
-    def perform_create(self, serializer):
-        # O Django pega o usuário do Token JWT e salva no campo usuario_idoso
-        serializer.save(usuario_idoso=self.request.user)
 
     def get_queryset(self):
         user = self.request.user
-        # Se for IDOSO, ele só vê as próprias dúvidas
-        if user.role == 'IDOSO':
-            return Duvida.objects.filter(usuario_idoso=user)
-        # Se for PROFISSIONAL, vê todas para responder
-        return Duvida.objects.all()
-    
+        
+        # 1. ADMIN e PROFISSIONAL: Enxergam absolutamente tudo
+        if user.is_staff or user.role in ['ADMIN', 'PROFISSIONAL_SUS']:
+            return Duvida.objects.all().order_by('-data_pergunta')
+            
+        # 2. IDOSO: Só enxerga as dúvidas que ele mesmo criou
+        return Duvida.objects.filter(usuario_idoso=user).order_by('-data_pergunta')
+
+    def perform_create(self, serializer):
+        # Ao criar, o Django associa automaticamente ao usuário logado (Idoso)
+        serializer.save(usuario_idoso=self.request.user)
+
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
+        user = request.user
         
-        # Só permite responder se o usuário for PROFISSIONAL_SUS
-        if request.user.role != 'PROFISSIONAL_SUS':
-            return Response({"erro": "Apenas profissionais podem responder."}, status=403)
+        # Bloqueia se o usuário for apenas um IDOSO tentando responder
+        if user.role == 'IDOSO' and not user.is_staff:
+            return Response(
+                {"erro": "Você não tem permissão para responder ou editar esta dúvida."}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
 
-        # Atualiza os dados da resposta
-        instance.texto_resposta = request.data.get('texto_resposta')
-        instance.respondido_por = request.user  # Identifica o profissional
-        instance.data_resposta = timezone.now() # Registra o horário
-        instance.status = 'RESPONDIDA'          # Tira do pendente
+        # LÓGICA DE RESPOSTA (Para Profissional ou Admin)
+        texto_res = request.data.get('texto_resposta')
+        if texto_res:
+            instance.texto_resposta = texto_res
+            instance.respondido_por = user
+            instance.data_resposta = timezone.now()
+            instance.status = 'RESPONDIDA'
         
+        # O ADMIN pode editar qualquer outro campo se quiser (ex: status, texto da pergunta)
+        if user.role == 'ADMIN' or user.is_staff:
+            instance.status = request.data.get('status', instance.status)
+
         instance.save()
         
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        # APENAS ADMIN pode deletar uma dúvida para não haver perda de dados acidental
+        if request.user.role != 'ADMIN' and not request.user.is_staff:
+            return Response(
+                {"erro": "Apenas administradores podem excluir dúvidas."}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().destroy(request, *args, **kwargs)

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 import dj_database_url
 from pathlib import Path
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +29,7 @@ SECRET_KEY = 'django-insecure-2_emy^)#y*2n5@4p2bo3e)wc952b9-kn07!(+=i%70)_8)8zek
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] # Para desenvolvimento e TCC rápido, ou coloque o domínio do Render depois.
+ALLOWED_HOSTS = ['*', 'back-sifilis.onrender.com', 'localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -63,8 +64,11 @@ REST_FRAMEWORK = {
     ],
 }
 
+# No seu settings.py
 SIMPLE_JWT = {
     'TOKEN_OBTAIN_SERIALIZER': 'apps.accounts.serializers.MyTokenObtainPairSerializer',
+    'AUTH_HEADER_TYPES': ('Bearer',), # <--- ADICIONE ISSO AQUI!
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7), # Opcional: aumenta a duração para não deslogar toda hora no TCC
 }
 SPECTACULAR_SETTINGS = {
     'TITLE': 'App Sífilis 60+ API',
@@ -78,9 +82,9 @@ SPECTACULAR_SETTINGS = {
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # DEVE SER O PRIMEIRO OU SEGUNDO
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -88,14 +92,17 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True  # Libera qualquer origem (mais fácil para testar no celular)
+CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = [
-    "accept",
-    "authorization",
-    "content-type",
-    "user-agent",
-    "x-csrftoken",
-    "x-requested-with",
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "ngrok-skip-browser-warning",  # <--- ISSO AQUI É OBRIGATÓRIO!
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://back-sifilis.onrender.com",
+    "http://localhost:8000"
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -120,13 +127,20 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://postgres:postgres@db:5432/postgres',
+#         conn_max_age=600
+#     )
+# }
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgres://postgres:postgres@db:5432/postgres',
-        conn_max_age=600
+        default=os.environ.get('DATABASE_URL') or 'postgres://postgres:postgres@db:5432/postgres'
     )
 }
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

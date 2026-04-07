@@ -12,4 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+# Garante que o script tenha permissão dentro do container também
+RUN chmod +x /app/entrypoint.sh
+
+# O comando final agora é o nosso script
+ENTRYPOINT ["/app/entrypoint.sh"]

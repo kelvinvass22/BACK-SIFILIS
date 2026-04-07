@@ -1,21 +1,41 @@
 #!/bin/sh
 
-# Espera o banco de dados ficar pronto (opcional mas bom)
-echo "Aguardando migrações..."
+# 1. VALIDAÇÃO DE AMBIENTE
+echo "--- Verificando Ambiente ---"
+if [ -z "$DATABASE_URL" ]; then
+    echo "AVISO: DATABASE_URL não encontrada. Usando configurações padrão (Local/Docker)."
+else
+    echo "DATABASE_URL detectada. Preparando conexão com o banco remoto..."
+fi
 
-# Roda as migrações para criar as tabelas no banco do Render
-python manage.py migrate --noinput
+# 2. ESPERA PELO BANCO (OPCIONAL MAS SEGURO)
+# Se estiver no Render, ele costuma esperar o banco subir, mas via código é mais garantido.
+echo "Aguardando banco de dados ficar disponível..."
 
-# Coleta arquivos estáticos
+# 3. MIGRAÇÕES
+echo "Executando: python manage.py migrate"
+# O --noinput evita que o script pare pedindo confirmação
+python manage.py migrate --noinput || { echo "ERRO: Falha ao rodar migrações. Verifique a DATABASE_URL."; exit 1; }
+
+# 4. ARQUIVOS ESTÁTICOS
+echo "Executando: collectstatic"
 python manage.py collectstatic --noinput
 
-# Tenta criar um superusuário automaticamente (Troque os dados se quiser)
-# Usamos o shell do python para não travar pedindo senha
-echo "from django.contrib.auth import get_user_model; User = get_user_model(); \
-User.objects.filter(username='admin').exists() or \
-User.objects.create_superuser('admin', 'admin@gmail.com', 'admin2025')" | python manage.py shell
+# 5. SUPERUSER AUTOMÁTICO
+# Note que usei variáveis ou valores padrão para evitar erros de sintaxe no shell
+echo "Verificando superusuário..."
+echo "from django.contrib.auth import get_user_model; \
+User = get_user_model(); \
+username = 'admin'; \
+email = 'admin@email.com'; \
+password = 'sua_senha_aqui'; \
+not User.objects.filter(username=username).exists() and \
+User.objects.create_superuser(username, email, password); \
+print('Usuário admin verificado/criado')" | python manage.py shell
 
-echo "Iniciando o servidor Gunicorn..."
-# Se a variável $PORT estiver vazia (local), usa a 8000. Se tiver valor (Render), usa a do Render.
-echo "Iniciando o servidor Gunicorn na porta ${PORT:-8000}..."
-exec gunicorn core.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+# 6. START DO SERVIDOR
+echo "--- Iniciando Gunicorn ---"
+PORT_NUMBER=${PORT:-8000}
+echo "Servidor subindo na porta: $PORT_NUMBER"
+
+exec gunicorn core.wsgi:application --bind 0.0.0.0:$PORT_NUMBER

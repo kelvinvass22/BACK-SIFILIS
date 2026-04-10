@@ -9,6 +9,6 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=20, choices=ROLES, default='IDOSO')
     data_nascimento = models.DateField(null=True, blank=True)
-    telefone = models.CharField(max_length=20, null=True, blank=True) # ADICIONE ESTA LINHA
+    telefone = models.CharField(max_length=20, null=True, blank=True) # ADICIONE ISSO
     cns = models.CharField(max_length=15, null=True, blank=True)
     is_verified_professional = models.BooleanField(default=False)

@@ -13,8 +13,7 @@ from apps.content.views import PostEducativoViewSet
 from apps.qna.views import DuvidaViewSet
 from apps.gamification.views import PontuacaoViewSet
 
-from apps.accounts.views import registrar_usuario 
-
+from apps.accounts.views import registrar_usuario, gerenciar_perfil
 router = DefaultRouter()
 router.register(r'conteudo', PostEducativoViewSet)
 router.register(r'duvidas', DuvidaViewSet, basename='duvida')
@@ -22,8 +21,10 @@ router.register(r'ranking', PontuacaoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
     path('api/usuarios/registrar/', registrar_usuario, name='registrar_usuario'),
+    
+    # ESTA É A ROTA QUE ESTAVA FALTANDO NO SEU LOG:
+    path('api/accounts/me/', gerenciar_perfil, name='gerenciar_perfil'),
 
     path('api/', include(router.urls)),
     

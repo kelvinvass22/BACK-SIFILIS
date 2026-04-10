@@ -15,11 +15,13 @@ def registrar_usuario(request):
             return Response({"error": "Usuário já existe"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Cria o usuário usando o modelo customizado do AppSífilis
+        # No views.py (registrar_usuario)
         user = User.objects.create_user(
             username=data.get('username'),
             password=data.get('password'),
             role=data.get('role', 'IDOSO'),
-            data_nascimento=data.get('data_nascimento')
+            data_nascimento=data.get('data_nascimento'),
+            telefone=data.get('telefone') # Adicione isso aqui também!
         )
         return Response({"message": "Usuário criado com sucesso!"}, status=status.HTTP_201_CREATED)
     

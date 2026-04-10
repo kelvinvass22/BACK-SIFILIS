@@ -4,7 +4,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'data_nascimento']
+        fields = ['id', 'username', 'email', 'role', 'data_nascimento', 'telefone'] # ADICIONE 'telefone'
 
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer

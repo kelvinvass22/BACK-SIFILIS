@@ -8,8 +8,7 @@ class User(AbstractUser):
         ('ADMIN', 'Administrador'),
     )
     role = models.CharField(max_length=20, choices=ROLES, default='IDOSO')
-    # ADICIONE ESTA LINHA:
-    data_nascimento = models.DateField(null=True, blank=True) 
-
-    def __str__(self):
-        return f"{self.username} - {self.role}"
+    data_nascimento = models.DateField(null=True, blank=True)
+    telefone = models.CharField(max_length=20, null=True, blank=True) # ADICIONE ESTA LINHA
+    cns = models.CharField(max_length=15, null=True, blank=True)
+    is_verified_professional = models.BooleanField(default=False)

@@ -19,7 +19,8 @@ python manage.py migrate --noinput || { echo "ERRO: Falha ao rodar migrações. 
 
 # 4. ARQUIVOS ESTÁTICOS
 echo "Executando: collectstatic"
-python manage.py collectstatic --noinput
+mkdir -p /app/staticfiles  # Garante que a pasta existe
+python manage.py collectstatic --noinput --clear # O --clear limpa lixo antigo
 
 # 5. SUPERUSER AUTOMÁTICO
 # Note que usei variáveis ou valores padrão para evitar erros de sintaxe no shell

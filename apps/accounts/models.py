@@ -12,3 +12,4 @@ class User(AbstractUser):
     telefone = models.CharField(max_length=20, null=True, blank=True) # ADICIONE ISSO
     cns = models.CharField(max_length=15, null=True, blank=True)
     is_verified_professional = models.BooleanField(default=False)
+    foto = models.ImageField(upload_to='perfil/', null=True, blank=True)

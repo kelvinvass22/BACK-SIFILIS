@@ -14,7 +14,7 @@ import os
 import dj_database_url
 from pathlib import Path
 from datetime import timedelta
-
+from decouple import config # ou de onde você importa o config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,6 +84,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # DEVE SER O PRIMEIRO OU SEGUNDO
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -144,7 +145,10 @@ DATABASES = {
     )
 }
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -186,3 +190,31 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --- Configurações Cloudflare R2 ---
+AWS_ACCESS_KEY_ID = config("CLOUDFLARE_R2_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = config("CLOUDFLARE_R2_SECRET_KEY")
+AWS_S3_ENDPOINT_URL = config("CLOUDFLARE_R2_BUCKET_ENDPOINT")
+AWS_STORAGE_BUCKET_NAME = config("CLOUDFLARE_R2_BUCKET") # Aqui ele pega o 'appsifilis'
+
+# Configurações extras obrigatórias para o R2
+AWS_S3_REGION_NAME = "auto"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_FILE_OVERWRITE = False
+
+# --- Configuração de Storages ---
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Domínio Público do R2 (para visualizar as fotos)
+AWS_S3_CUSTOM_DOMAIN = config("AWS_S3_CUSTOM_DOMAIN", default="pub-1293c24e889b457f83d56dbc02ce5123.r2.dev")
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+
+# Fallback para compatibilidade
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"

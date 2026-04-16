@@ -4,8 +4,9 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'role', 'data_nascimento', 'telefone']
-        read_only_fields = ['username', 'role'] # Segurança: não permite alterar usuário ou cargo aqui
+        # Adicionei 'foto' e 'cns' aqui
+        fields = ['id', 'username', 'email', 'first_name', 'role', 'data_nascimento', 'telefone', 'cns', 'foto']
+        read_only_fields = ['username', 'role']
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

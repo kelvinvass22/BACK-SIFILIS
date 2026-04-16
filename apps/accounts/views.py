@@ -36,3 +36,20 @@ def registrar_usuario(request):
         # Retorna o erro real para o console do celular
         print(f"Erro no registro: {str(e)}")
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+@api_view(['GET', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def gerenciar_perfil(request):
+    user = request.user
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    
+    elif request.method == 'PATCH':
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

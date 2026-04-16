@@ -9,15 +9,15 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['username', 'role']
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        # Chama a validação padrão (que verifica senha e gera o token)
         data = super().validate(attrs)
-
-        # Aqui injetamos os dados do seu modelo User no JSON de resposta
-        # O self.user é o usuário que acabou de logar no PostgreSQL
+        # Injeta os dados necessários para o App
         data['role'] = self.user.role
         data['username'] = self.user.username
         data['user_id'] = self.user.id
-
+        # Se quiser que a foto carregue no login:
+        data['foto'] = self.user.foto.url if self.user.foto else None
         return data

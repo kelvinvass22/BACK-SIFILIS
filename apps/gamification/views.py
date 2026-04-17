@@ -10,6 +10,10 @@ class PontuacaoViewSet(viewsets.ModelViewSet):
     serializer_class = PontuacaoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        # Aqui garantimos que o usuario_id no banco receba o ID de quem está logado
+        serializer.save(usuario=self.request.user)
+    
     def list(self, request, *args, **kwargs):
         try:
             ranking = Pontuacao.objects.values(

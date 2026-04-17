@@ -48,8 +48,15 @@ def gerenciar_perfil(request):
         return Response(serializer.data)
     
     elif request.method == 'PATCH':
+        # DEBUG: Veja no log do Render o que está chegando
+        print(f"Dados recebidos: {request.data}") 
+        print(f"Arquivos recebidos: {request.FILES}")
+
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        
+        # Se der erro 400, o console do Render vai mostrar o motivo real
+        print(f"Erros do Serializer: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

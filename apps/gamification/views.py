@@ -11,7 +11,7 @@ class PontuacaoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        # Removi o try/except genérico para você conseguir ver erros no log se algo quebrar
+    # O .values() cria chaves como 'usuario__username'
         ranking = Pontuacao.objects.values(
             'usuario__username', 
             'usuario__perfil' 
@@ -19,5 +19,4 @@ class PontuacaoViewSet(viewsets.ModelViewSet):
             total_pontos=Sum('pontos')
         ).order_by('-total_pontos')
         
-        # O list(ranking) aqui é necessário porque o ranking é um QuerySet de dicionários
         return Response(list(ranking), status=status.HTTP_200_OK)

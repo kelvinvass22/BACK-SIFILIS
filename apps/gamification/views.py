@@ -10,19 +10,30 @@ class PontuacaoViewSet(viewsets.ModelViewSet):
     serializer_class = PontuacaoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def list(self, request, *args, **kwargs):
+        # Sobrescrevemos o list para retornar o ranking somado por padrão
+        ranking = Pontuacao.objects.values(
+            'usuario__username', 
+            'usuario__perfil' # Inclua o perfil se quiser mostrar o ícone de idoso/prof
+        ).annotate(
+            total_pontos=Sum('pontos')
+        ).order_by('-total_pontos')
+        
+        return Response(ranking)
+
     def perform_create(self, serializer):
+        # Garante que o ponto seja salvo no usuário logado
         serializer.save(usuario=self.request.user)
 
     @action(detail=False, methods=['get'])
     def ranking_global(self, request):
-        # Soma todos os pontos por usuário e ordena
+        # Sua lógica de Top 3 e posição individual
         ranking = Pontuacao.objects.values('usuario__username')\
             .annotate(total_pontos=Sum('pontos'))\
             .order_by('-total_pontos')
 
         top_3 = ranking[:3]
         
-        # Encontra a posição do usuário logado
         posicao_user = 0
         pontos_user = 0
         for i, item in enumerate(ranking):

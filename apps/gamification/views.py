@@ -11,18 +11,13 @@ class PontuacaoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        try:
-            # Agrupa e soma. Retorna [{'usuario__username': 'admin', 'total_pontos': 500}, ...]
-            ranking = Pontuacao.objects.values(
-                'usuario__username', 
-                'usuario__perfil' 
-            ).annotate(
-                total_pontos=Sum('pontos')
-            ).order_by('-total_pontos')
-            
-            return Response(list(ranking), status=status.HTTP_200_OK)
-        except Exception:
-            return Response([], status=status.HTTP_200_OK)
-
-    def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)
+        # Removi o try/except genérico para você conseguir ver erros no log se algo quebrar
+        ranking = Pontuacao.objects.values(
+            'usuario__username', 
+            'usuario__perfil' 
+        ).annotate(
+            total_pontos=Sum('pontos')
+        ).order_by('-total_pontos')
+        
+        # O list(ranking) aqui é necessário porque o ranking é um QuerySet de dicionários
+        return Response(list(ranking), status=status.HTTP_200_OK)

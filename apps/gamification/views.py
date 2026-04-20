@@ -11,19 +11,30 @@ class PontuacaoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Aqui garantimos que o usuario_id no banco receba o ID de quem está logado
         serializer.save(usuario=self.request.user)
     
     def list(self, request, *args, **kwargs):
         try:
+            # ADICIONAMOS: usuario__role e usuario__first_name
             ranking = Pontuacao.objects.values(
-                'usuario__username' # Deixe apenas campos que existem no User
+                'usuario__username',
+                'usuario__first_name',
+                'usuario__role' 
             ).annotate(
                 total_pontos=Sum('pontos')
             ).order_by('-total_pontos')
+
+            # Mapeamos para que o JSON de saída tenha as chaves que o React espera
+            data = [
+                {
+                    "usuario__username": item['usuario__username'],
+                    "usuario_nome": item['usuario__first_name'] or item['usuario__username'],
+                    "role": item['usuario__role'], # Crucial para o seu Front-end!
+                    "total_pontos": item['total_pontos']
+                } for item in ranking
+            ]
             
-            return Response(list(ranking), status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-            # Isso vai te ajudar a ver o erro real no log do Render/Terminal
             print(f"ERRO NO RANKING: {e}") 
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

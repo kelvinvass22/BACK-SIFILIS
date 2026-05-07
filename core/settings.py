@@ -116,17 +116,22 @@ MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CONFIGURAÇÃO DE E-MAIL À PROVA DE ERRO 500
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# settings.py
+
+# Volte para o modo real de envio
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_TIMEOUT = 30 
+EMAIL_TIMEOUT = 20 # Aumentamos um pouco para dar tempo do Google responder
 
-# Usar os.environ garante que o Render pegue as variáveis sem erro de biblioteca
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kelvinvass12@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'ehyg labi tviz uzhz')
+# LER DO RENDER (Nunca escreva a senha aqui!)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-EMAIL_FAIL_SILENTLY = True 
+# Se falhar, o App não morre (Dará Sucesso no front, mas o e-mail não chega)
+EMAIL_FAIL_SILENTLY = True
 
 DEFAULT_FROM_EMAIL = f'App Sífilis 60+ <{EMAIL_HOST_USER}>'
 

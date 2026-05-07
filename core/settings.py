@@ -6,8 +6,9 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-2_emy^)#y*2n5@4p2bo3e)wc952b9-kn07!(+=i%70)_8)8zek'
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-2_emy^)#y*2n5@4p2bo3e)wc952b9-kn07!(+=i%70)_8)8zek')
+DEBUG = config('DEBUG', default=True, cast=bool) # No Render, coloque DEBUG=False nas variáveis
+
 ALLOWED_HOSTS = ['*', 'back-sifilis.onrender.com', 'localhost', '127.0.0.1', '10.0.2.2']
 APPEND_SLASH = True
 
@@ -114,12 +115,16 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# CONFIGURAÇÃO DE E-MAIL ROBUSTA PARA PRODUÇÃO
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kelvinvass12@gmail.com'
-EMAIL_HOST_PASSWORD = 'ehyg labi tviz uzhz'
+EMAIL_TIMEOUT = 30 # Essencial para não dar timeout no Render
+
+# Lendo as variáveis que você configurou no painel do Render
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='kelvinvass12@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='ehyg labi tviz uzhz')
 DEFAULT_FROM_EMAIL = f'App Sífilis 60+ <{EMAIL_HOST_USER}>'
 
 REST_FRAMEWORK = {
@@ -141,4 +146,9 @@ REST_AUTH = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ["https://back-sifilis.onrender.com", "http://localhost:8000", "http://127.0.0.1:8081","http://localhost:8081"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://back-sifilis.onrender.com", 
+    "http://localhost:8000", 
+    "http://127.0.0.1:8081",
+    "http://localhost:8081"
+]

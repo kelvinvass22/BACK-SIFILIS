@@ -11,9 +11,11 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             user = context.get('user')
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-            # Link para o teu App Expo rodando na porta 8081
-            context['password_reset_url'] = f"http://localhost:8081/auth/reset-password/{uid}/{token}"
+            # Link para o teu App Expo rodando na porta 8081 no local
+            # context['password_reset_url'] = f"http://localhost:8081/auth/reset-password/{uid}/{token}"
 
+            #produção 
+            context['password_reset_url'] = f"appsifilis://auth/reset-password/{uid}/{token}"
         msg = self.render_mail(template_prefix, email, context)
         html_template = f"{template_prefix}_message.html"
         

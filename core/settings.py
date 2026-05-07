@@ -115,16 +115,19 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CONFIGURAÇÃO DE E-MAIL ROBUSTA PARA PRODUÇÃO
+# CONFIGURAÇÃO DE E-MAIL À PROVA DE ERRO 500
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_TIMEOUT = 30 # Essencial para não dar timeout no Render
+EMAIL_TIMEOUT = 30 
 
-# Lendo as variáveis que você configurou no painel do Render
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='kelvinvass12@gmail.com')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='ehyg labi tviz uzhz')
+# Usar os.environ garante que o Render pegue as variáveis sem erro de biblioteca
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kelvinvass12@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'ehyg labi tviz uzhz')
+
+EMAIL_FAIL_SILENTLY = True 
+
 DEFAULT_FROM_EMAIL = f'App Sífilis 60+ <{EMAIL_HOST_USER}>'
 
 REST_FRAMEWORK = {

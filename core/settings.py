@@ -116,7 +116,7 @@ MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CONFIGURAÇÃO DE E-MAIL À PROVA DE ERRO 500
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

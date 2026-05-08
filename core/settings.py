@@ -116,24 +116,21 @@ MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CONFIGURAÇÃO DE E-MAIL À PROVA DE ERRO 500
-# settings.py
 
-# Volte para o modo real de envio
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.resend.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_TIMEOUT = 20 # Aumentamos um pouco para dar tempo do Google responder
 
-# LER DO RENDER (Nunca escreva a senha aqui!)
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# No Resend, o usuário é fixo, o que muda é a senha (API KEY)
+EMAIL_HOST_USER = 'resend'
+EMAIL_HOST_PASSWORD = os.environ.get('RESEND_API_KEY')
 
-# Se falhar, o App não morre (Dará Sucesso no front, mas o e-mail não chega)
-EMAIL_FAIL_SILENTLY = True
+# No plano gratuito, você SÓ PODE usar este remetente:
+DEFAULT_FROM_EMAIL = 'onboarding@resend.dev'
 
-DEFAULT_FROM_EMAIL = f'App Sífilis 60+ <{EMAIL_HOST_USER}>'
+# Deixamos False para você ver se o erro mudou caso falhe
+EMAIL_FAIL_SILENTLY = False
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

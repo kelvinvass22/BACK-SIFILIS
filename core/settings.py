@@ -7,7 +7,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-2_emy^)#y*2n5@4p2bo3e)wc952b9-kn07!(+=i%70)_8)8zek')
-DEBUG = config('DEBUG', default=True, cast=bool) # No Render, coloque DEBUG=False nas variáveis
+DEBUG = config('DEBUG', default=True, cast=bool) 
 
 ALLOWED_HOSTS = ['*', 'back-sifilis.onrender.com', 'localhost', '127.0.0.1', '10.0.2.2']
 APPEND_SLASH = True
@@ -115,23 +115,17 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CONFIGURAÇÃO DE E-MAIL À PROVA DE ERRO 500
+# --- CONFIGURAÇÃO DE E-MAIL (LIMPA E PRONTA PARA API) ---
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.resend.com'
-EMAIL_PORT = 465
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True  
+# Usamos dummy porque o envio real será feito pela API no adapters.py
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-# No Resend, o usuário é fixo, o que muda é a senha (API KEY)
-EMAIL_HOST_USER = 'resend'
-EMAIL_HOST_PASSWORD = os.environ.get('RESEND_API_KEY')
+# O remetente que você validou no Mailjet
+DEFAULT_FROM_EMAIL = 'seu-email-validado@gmail.com' 
 
-# No plano gratuito, você SÓ PODE usar este remetente:
-DEFAULT_FROM_EMAIL = 'onboarding@resend.dev'
-
-# Deixamos False para você ver se o erro mudou caso falhe
 EMAIL_FAIL_SILENTLY = False
+
+# -------------------------------------------------------
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

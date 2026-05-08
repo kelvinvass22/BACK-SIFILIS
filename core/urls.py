@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView  # Importante para carregar o HTML
 
 from apps.accounts.views import password_reset_confirm_view, registrar_usuario, gerenciar_perfil
 from apps.content.views import PostEducativoViewSet
@@ -22,7 +23,13 @@ urlpatterns = [
     path('api/usuarios/registrar/', registrar_usuario, name='registrar_usuario'),
     path('api/accounts/me/', gerenciar_perfil, name='gerenciar_perfil'),
 
-    # ROTA DE RESET CORRIGIDA
+    # 1. ROTA DE REDIRECIONAMENTO (O que o usuário clica no e-mail)
+    # Esta rota carrega o HTML que contém o script para abrir o App
+    path('auth/reset-password/<uidb64>/<token>/', 
+         TemplateView.as_view(template_name='registration/password_reset_confirm.html'), 
+         name='password_reset_confirm_web'),
+
+    # 2. ROTA DE RESET API (Onde o App ou o Formulário enviam os dados)
     path('api/accounts/password/reset/confirm/<uidb64>/<token>/', 
          PasswordResetConfirmView.as_view(), 
          name='password_reset_confirm'),

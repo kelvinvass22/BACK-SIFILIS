@@ -18,7 +18,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             user = context.get('user')
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-            context['password_reset_url'] = f"appsifilis://auth/reset-password/{uid}/{token}"
+            context['password_reset_url'] = f"https://back-sifilis.onrender.com/auth/reset-password/{uid}/{token}/"
 
         # 3. Renderiza o conteúdo do e-mail
         subject = render_to_string(f'{template_prefix}_subject.txt', context).replace('\n', '')

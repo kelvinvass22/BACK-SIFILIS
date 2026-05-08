@@ -33,7 +33,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
           'Messages': [
             {
               "From": {
-                "Email": "seu-email-do-mailjet@gmail.com", # O e-mail que você cadastrou lá
+                "Email": "kelvinvass12@gmail.com", # O e-mail que você cadastrou lá
                 "Name": "App Sífilis 60+"
               },
               "To": [{"Email": email}],

@@ -18,6 +18,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
           user = context.get('user')
           uid = urlsafe_base64_encode(force_bytes(user.pk))
           token = default_token_generator.make_token(user)
+          # No seu adapters.py
           context['password_reset_url'] = f"https://back-sifilis.onrender.com/auth/reset-password/{uid}/{token}"
           
           context['uid'] = uid

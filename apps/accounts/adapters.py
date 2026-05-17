@@ -15,10 +15,13 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
         # 2. Lógica do seu link appsifilis://
         if template_prefix == 'account/email/password_reset_key':
-            user = context.get('user')
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            context['password_reset_url'] = f"https://back-sifilis.onrender.com/auth/reset-password/{uid}/{token}"
+          user = context.get('user')
+          uid = urlsafe_base64_encode(force_bytes(user.pk))
+          token = default_token_generator.make_token(user)
+          context['password_reset_url'] = f"https://back-sifilis.onrender.com/auth/reset-password/{uid}/{token}"
+          
+          context['uid'] = uid
+          context['token'] = token
             
         # 3. Renderiza o conteúdo do e-mail
         subject = render_to_string(f'{template_prefix}_subject.txt', context).replace('\n', '')
